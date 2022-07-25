@@ -3,24 +3,49 @@ package br.com.rmlo.appnoticias.ui.news;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import br.com.rmlo.appnoticias.domain.News;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import br.com.rmlo.appnoticias.data.remote.NewsApi;
+import br.com.rmlo.appnoticias.domain.News;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NewsViewModel extends ViewModel {
 
-    private final MutableLiveData<List<News>> news;
+    private final MutableLiveData<List<News>> news = new MutableLiveData<>();
+    private final NewsApi api;
 
     public NewsViewModel() {
-        this.news = new MutableLiveData<>();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://rmlo.github.io/app-de-noticias-api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-        List<News> news = new ArrayList<>();
-        news.add(new News("Ferroviaria tem desfalque importante",""));
-        news.add(new News("Ferrerinha joga no sábado",""));
-        news.add(new News("Copa do mundo feminina está terminando",""));
+        api = retrofit.create(NewsApi.class);
+        this.findNews();
 
-        this.news.setValue(news);
+    }
+
+    private void findNews() {
+        api.getNews().enqueue(new Callback<List<News>>() {
+            @Override
+            public void onResponse(Call<List<News>> call, Response<List<News>> response) {
+                if (response.isSuccessful()){
+                    news.setValue(response.body());
+                } else {
+                    //TODO pensar em um tratamento de erros.
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<News>> call, Throwable t) {
+                //TODO pensar em um tratamento de erros.
+            }
+        });
     }
 
     public LiveData<List<News>> getNews() {
