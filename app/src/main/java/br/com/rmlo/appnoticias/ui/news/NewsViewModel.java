@@ -1,8 +1,12 @@
 package br.com.rmlo.appnoticias.ui.news;
 
+import android.app.Application;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.room.Room;
+import br.com.rmlo.appnoticias.data.local.AppDataBase;
 
 import java.util.List;
 
@@ -18,6 +22,7 @@ public class NewsViewModel extends ViewModel {
 
     private final MutableLiveData<List<News>> news = new MutableLiveData<>();
     private final NewsApi api;
+
 
     public NewsViewModel() {
         Retrofit retrofit = new Retrofit.Builder()
