@@ -1,9 +1,14 @@
 <resources>
     <string name="app_name">app noticias</string>
+
     <string name="title_news">News</string>
     <string name="title_favorites">Favorites</string>
+
     <string name="txt_open_link">Abrir Link</string>
     <string name="cd_news_image">News image</string>
+
     <string name="iv_favorite_icon">Favorite Icon</string>
     <string name="iv_share_icon">Share Icon</string>
+
+    <string name="error_network">Network error</string>
 </resources>

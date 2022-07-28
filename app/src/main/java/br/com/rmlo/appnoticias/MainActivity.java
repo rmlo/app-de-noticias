@@ -7,7 +7,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.room.Room;
 
 import br.com.rmlo.appnoticias.data.local.AppDataBase;
 import br.com.rmlo.appnoticias.databinding.ActivityMainBinding;
@@ -15,7 +14,6 @@ import br.com.rmlo.appnoticias.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-    private AppDataBase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,16 +27,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-        this.setupDb();
     }
 
-    private void setupDb() {
-        db = Room.databaseBuilder(this, AppDataBase.class, "soccer-news")
-                .allowMainThreadQueries()
-                .build();
-    }
-
-    public AppDataBase getDb() {
-        return db;
-    }
 }

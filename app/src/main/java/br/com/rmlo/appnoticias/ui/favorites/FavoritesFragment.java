@@ -20,28 +20,28 @@ import br.com.rmlo.appnoticias.domain.News;
 public class FavoritesFragment extends Fragment {
 
     private FragmentFavoritesBinding binding;
+    private FavoritesViewModel favoritesViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
-        FavoritesViewModel favoritesViewModel = new ViewModelProvider(this).get(FavoritesViewModel.class);
+        favoritesViewModel = new ViewModelProvider(this).get(FavoritesViewModel.class);
 
         binding = FragmentFavoritesBinding.inflate(inflater, container, false);
 
         loadFavoriteNews();
+
         return binding.getRoot();
     }
 
     private void loadFavoriteNews() {
-        MainActivity activity = (MainActivity) getActivity();
-        List<News> favoriteNews = null;
-        if (activity != null) {
-            favoriteNews = activity.getDb().newsDao().loadFavoriteNews(false);
-        }
-        binding.rvFavorite.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.rvFavorite.setAdapter(new NewsAdapter(favoriteNews, updatedNews ->{
-            activity.getDb().newsDao().save(updatedNews);
-            loadFavoriteNews();
-        }));
+        favoritesViewModel.loadFavoriteNews().observe(getViewLifecycleOwner(), localNews ->{
+            binding.rvFavorite.setLayoutManager(new LinearLayoutManager(getContext()));
+            binding.rvFavorite.setAdapter(new NewsAdapter(localNews, updatedNews ->{
+                favoritesViewModel.saveNews(updatedNews);
+                loadFavoriteNews();
+            }));
+        });
     }
+
 
     @Override
     public void onDestroyView() {
